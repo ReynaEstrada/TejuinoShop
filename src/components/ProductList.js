@@ -1,29 +1,23 @@
 import {useEffect, useState} from 'react';
 import Product from './Product';
-import React from 'react'
 
-function ProductList() {
+function ProductList(props) {
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1)
 
-    const [ProductTec, setonlyProducts] = useState([])
+  useEffect(() => {
+    async function fetchProducts() {
+      const response = await  fetch('https://dummyjson.com/products');
+      const data = await response.json();
+      setProducts(data.products);
+    }
+    fetchProducts();
+  }, []);
 
-    useEffect(() => {
-        async function fetchProductos() {
-        const response = await  fetch ('https://dummyjson.com/products');
-        const data = await response.json();
-        setonlyProducts(data.products);
-   }
-   fetchProductos();
-    }, []);
   return (
     <div className='container mx-auto px-6 bg-slate-400'>
-      <div className='grid grid-cols-3 gap-2'>
-        {ProductTec.map((product) => {
-        return (
-          <div >
-            <Product  key={product.id} Product={product}/>
-          </div>
-        );
-        })}
+      <div className='grid lg:grid-cols-3  grid-cols-1 gap-2'> 
+        {products.map((product) => <Product  key={product.id} item={product}/>)}
       </div>
     </div>
   );
